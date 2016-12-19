@@ -185,8 +185,8 @@ def main():
         log.info('Parsing of Pokestops disabled.')
     if args.no_gyms:
         log.info('Parsing of Gyms disabled.')
-    if (args.scheduler == "SpeedScan") and args.no_gyms and args.no_pokestops:
-        raise Exception("Please remove -nk (no pokestops) or -ng (no gyms) to enable -speed scanning.")
+        if (args.scheduler == "SpeedScan") and args.no_pokestops:
+            raise Exception("Please remove -nk (no pokestops) or -ng (no gyms) to enable -speed scanning.")
     if args.encounter:
         log.info('Encountering pokemon enabled.')
 
