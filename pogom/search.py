@@ -62,7 +62,7 @@ def jitterLocation(location=None, maxMeters=10):
 
 
 # Thread to handle user input.
-def switch_status_printer(display_type, current_page):
+def switch_status_printer(display_type, current_page, loglevel):
     # Get a reference to the root logger.
     mainlog = logging.getLogger()
     # Disable logging of the first handler - the stream handler, and disable it's output.
@@ -76,13 +76,13 @@ def switch_status_printer(display_type, current_page):
             # Switch between logging and display.
             if display_type[0] != 'logs':
                 # Disable display, enable on screen logging.
-                mainlog.handlers[0].setLevel(logging.DEBUG)
+                mainlog.handlers[0].setLevel(loglevel)
                 display_type[0] = 'logs'
                 # If logs are going slowly, sometimes it's hard to tell you switched.  Make it clear.
                 print 'Showing logs...'
             elif display_type[0] == 'logs':
                 # Enable display, disable on screen logging (except for critical messages).
-                mainlog.handlers[0].setLevel(logging.CRITICAL)
+                mainlog.handlers[0].setLevel(logging.CRITICAL) 
                 display_type[0] = 'workers'
         elif command.isdigit():
                 current_page[0] = int(command)
@@ -97,11 +97,13 @@ def switch_status_printer(display_type, current_page):
 def status_printer(threadStatus, search_items_queue_array, db_updates_queue, wh_queue, account_queue, account_failures):
     display_type = ["workers"]
     current_page = [1]
+    #grab current log level
+    loglevel = logging.getLogger().getEffectiveLevel()
 
     # Start another thread to get user input.
     t = Thread(target=switch_status_printer,
                name='switch_status_printer',
-               args=(display_type, current_page))
+               args=(display_type, current_page, loglevel))
     t.daemon = True
     t.start()
 
