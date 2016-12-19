@@ -82,7 +82,7 @@ def switch_status_printer(display_type, current_page, loglevel):
                 print 'Showing logs...'
             elif display_type[0] == 'logs':
                 # Enable display, disable on screen logging (except for critical messages).
-                mainlog.handlers[0].setLevel(logging.CRITICAL) 
+                mainlog.handlers[0].setLevel(logging.CRITICAL)
                 display_type[0] = 'workers'
         elif command.isdigit():
                 current_page[0] = int(command)
