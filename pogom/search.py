@@ -62,9 +62,7 @@ def jitterLocation(location=None, maxMeters=10):
 
 
 # Thread to handle user input.
-def switch_status_printer(display_type, current_page, loglevel):
-    # Get a reference to the root logger.
-    mainlog = logging.getLogger()
+def switch_status_printer(display_type, current_page, mainlog, loglevel):
     # Disable logging of the first handler - the stream handler, and disable it's output.
     mainlog.handlers[0].setLevel(logging.CRITICAL)
 
@@ -97,13 +95,14 @@ def switch_status_printer(display_type, current_page, loglevel):
 def status_printer(threadStatus, search_items_queue_array, db_updates_queue, wh_queue, account_queue, account_failures):
     display_type = ["workers"]
     current_page = [1]
-    # Grab current log level
-    loglevel = logging.getLogger().getEffectiveLevel()
+    # Grab current log / level
+    mainlog = logging.getLogger()
+    loglevel = mainlog.getEffectiveLevel()
 
     # Start another thread to get user input.
     t = Thread(target=switch_status_printer,
                name='switch_status_printer',
-               args=(display_type, current_page, loglevel))
+               args=(display_type, current_page, mainlog, loglevel))
     t.daemon = True
     t.start()
 
